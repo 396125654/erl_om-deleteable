@@ -1,0 +1,14 @@
+%% -*- erlang -*-
+{application, erl_om,
+ [{description, "erl_om"},
+  {vsn, "0.1"},
+  {modules, []},
+  {registered, []},
+  {mod, {'erl_om_app', []}},
+  {env, [
+         {handlers, []},
+         {port, 8080},
+         {ip, {0,0,0,0}},
+         {docroot, "/home/tmp"}
+        ]},
+  {applications, [kernel, stdlib, crypto]}]}.
