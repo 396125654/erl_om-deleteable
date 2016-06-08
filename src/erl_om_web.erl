@@ -59,7 +59,9 @@ find_handler(Path) ->
                           {value, {_, Value}} ->
                               Value;
                           _ -> undefined
-                      end
+                      end;
+                  _ ->
+                      Acc
               end
       end, undefined, lists:seq(1, erlang:length(Components))).
 
