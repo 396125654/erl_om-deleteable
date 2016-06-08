@@ -40,7 +40,6 @@ get_option(Option, Options) ->
 
 handle_request(Method, Req, DocRoot) ->
     Path = Req:get(path),
-    io:format("Path = ~p~n", [Path]),
     case find_handler(Path) of
         {M,F} ->
             M:F(Method, Req, DocRoot);
