@@ -42,7 +42,7 @@ upgrade() ->
 %% @doc supervisor callback.
 init([]) ->
     Web = web_specs(erl_om_web),
-    Processes = [Web],
+    Processes = [Web, handler_spec()],
     Strategy = {one_for_one, 10, 10},
     {ok,
      {Strategy, lists:flatten(Processes)}}.
@@ -54,3 +54,8 @@ web_specs(Mod) ->
     {Mod,
      {Mod, start, [WebConfig]},
      permanent, 5000, worker, dynamic}.
+
+handler_spec() ->
+    {erl_om_handler,
+     {erl_om_handler, start_link, []},
+     permanent, 5000, worker, [erl_om_handler]}.

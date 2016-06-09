@@ -40,30 +40,15 @@ get_option(Option, Options) ->
 
 handle_request(Method, Req, DocRoot) ->
     Path = Req:get(path),
-    case find_handler(Path) of
+    case erl_om_handler:get_handler(Path) of
         {M,F} ->
             M:F(Method, Req, DocRoot);
+        {M,F,A} ->
+            M:F(Method, Req, DocRoot, A);
         _ ->
             default_handler(Method, Req, DocRoot)
     end.
 
-find_handler(Path) ->
-    Components = filename:split(Path),
-    Handlers = application:get_env(erl_om, handlers, []),
-    lists:foldl(
-      fun(N, Acc) ->
-              case Acc of
-                  undefined ->
-                      Subpath = filename:join(lists:sublist(Components,N)),
-                      case lists:keysearch(Subpath, 1, Handlers) of
-                          {value, {_, Value}} ->
-                              Value;
-                          _ -> undefined
-                      end;
-                  _ ->
-                      Acc
-              end
-      end, undefined, lists:seq(1, erlang:length(Components))).
 
 default_handler(Method, Req, DocRoot) ->
     "/" ++ Path = Req:get(path),
