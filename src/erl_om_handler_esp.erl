@@ -139,7 +139,8 @@ loop(#state{ref = Ref} = State) ->
             end;
         {'DOWN', Ref, _, _, _} ->
             State;
-        _Unknwon ->
+        Unknwon ->
+            io:format("receive unknown message ~p~n",[Unknwon]),
             State
     end.
 reply(From, ReplyAs, Reply) ->

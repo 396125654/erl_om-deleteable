@@ -40,7 +40,7 @@ get_option(Option, Options) ->
 
 handle_request(Method, Req, DocRoot) ->
     Path = Req:get(path),
-    case erl_om_handler:get_handler(Path) of
+    case erl_om_handler:get(Path) of
         {M,F} ->
             M:F(Method, Req, DocRoot);
         {M,F,A} ->

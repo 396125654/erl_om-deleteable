@@ -10,7 +10,7 @@
 -behaviour(gen_server).
 
 %% API
--export([start_link/0, add_handler/2, get_handlers/0, get_handler/1, remove_handler/1]).
+-export([start_link/0, add/3, add/4, all/0, get/1, remove/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -36,16 +36,17 @@ table() -> ?MODULE.
 %%--------------------------------------------------------------------
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+add(Regexp, M, F) ->
+    gen_server:call(?SERVER, {add, Regexp, {M,F,[]}}).
+add(Regexp, M, F, Options) ->
+    gen_server:call(?SERVER, {add, Regexp, {M,F,Options}}).
+remove(Regexp) ->
+    gen_server:call(?SERVER, {remove, Regexp}).
 
-add_handler(Regexp, Handler) ->
-    gen_server:call(?SERVER, {add_handler, Regexp, Handler,[]}).
-remove_handler(Regexp) ->
-    gen_server:call(?SERVER, {remove_handler, Regexp}).
-
-get_handlers() ->
+all() ->
     ets:tab2list(table()).
 
-get_handler(Path) ->
+get(Path) ->
     ets:foldl(
       fun({_Regexp, Handler, MP}, Acc) ->
               case Acc of
@@ -101,9 +102,9 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call({add_handler, Regexp, Handler}, _From, State) ->
+handle_call({add, Regexp, Handler}, _From, State) ->
     {reply, do_add_handler(Regexp,Handler), State};
-handle_call({remove_handler, Regexp}, _From, State) ->
+handle_call({remove, Regexp}, _From, State) ->
     {reply, do_remove_handler(Regexp), State};
 handle_call(_Request, _From, State) ->
     Reply = ok,
