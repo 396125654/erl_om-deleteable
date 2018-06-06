@@ -1,7 +1,7 @@
 %% -*- erlang -*-
 {application, erl_om,
  [{description, "erl_om"},
-  {vsn, "0.1"},
+  {vsn, "0.1.1"},
   {modules, []},
   {registered, []},
   {mod, {'erl_om_app', []}},
